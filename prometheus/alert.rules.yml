@@ -34,7 +34,7 @@ groups:
           service: b-mobile-fund-transfer
         annotations:
           summary: "Fund Transfer failure rate above 10%"
-          description: "Global failure ratio is {{ printf \"%.1f\" (mul $value 100) }}% over the last minute. SLO target is 1%."
+          description: "Global failure ratio is {{ $value | humanizePercentage }} over the last minute. SLO target is 1%."
 
       # Regional hotspot. Fires when one region degrades even if the global rate looks fine.
       - alert: FundTransferRegionalFailureSpike
@@ -45,7 +45,7 @@ groups:
           service: b-mobile-fund-transfer
         annotations:
           summary: "Fund Transfer failing in region {{ $labels.region }}"
-          description: "Region {{ $labels.region }} failure ratio is {{ printf \"%.1f\" (mul $value 100) }}% over the last minute."
+          description: "Region {{ $labels.region }} failure ratio is {{ $value | humanizePercentage }} over the last minute."
 
       # Latency SLO breach.
       - alert: FundTransferHighLatency
