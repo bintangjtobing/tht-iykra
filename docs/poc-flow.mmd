@@ -1,0 +1,5 @@
+flowchart LR
+    FT["fund-transfer-service<br/>Node.js + /metrics"] -->|scrape 5s| PROM["Prometheus<br/>+ alert rules"]
+    PROM -->|dashboards| GRAF["Grafana"]
+    PROM -->|fires alert| AM["Alertmanager"]
+    AM -->|webhook| WH["webhook-receiver<br/>logs WhatsApp + Ticket"]

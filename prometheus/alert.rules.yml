@@ -1,0 +1,70 @@
+groups:
+  - name: fund-transfer-slo
+    rules:
+      # Recording rule: transfer failure ratio over a 1 minute window.
+      - record: fund_transfer:failure_ratio:rate1m
+        expr: |
+          sum(rate(fund_transfer_requests_total{status="failed"}[1m]))
+          /
+          clamp_min(sum(rate(fund_transfer_requests_total[1m])), 0.001)
+
+      # Same ratio, split per region, to catch a regional hotspot.
+      - record: fund_transfer:failure_ratio:rate1m_by_region
+        expr: |
+          sum by (region) (rate(fund_transfer_requests_total{status="failed"}[1m]))
+          /
+          clamp_min(sum by (region) (rate(fund_transfer_requests_total[1m])), 0.001)
+
+      # p95 latency over 5 minutes.
+      - record: fund_transfer:latency_p95:5m
+        expr: |
+          histogram_quantile(
+            0.95,
+            sum(rate(fund_transfer_duration_seconds_bucket[5m])) by (le)
+          )
+
+  - name: fund-transfer-alerts
+    rules:
+      # Global failure rate breach. SLO target is 99% success, so 1% failure.
+      - alert: FundTransferHighFailureRate
+        expr: fund_transfer:failure_ratio:rate1m > 0.10
+        for: 30s
+        labels:
+          severity: critical
+          service: b-mobile-fund-transfer
+        annotations:
+          summary: "Fund Transfer failure rate above 10%"
+          description: "Global failure ratio is {{ printf \"%.1f\" (mul $value 100) }}% over the last minute. SLO target is 1%."
+
+      # Regional hotspot. Fires when one region degrades even if the global rate looks fine.
+      - alert: FundTransferRegionalFailureSpike
+        expr: fund_transfer:failure_ratio:rate1m_by_region > 0.30
+        for: 30s
+        labels:
+          severity: critical
+          service: b-mobile-fund-transfer
+        annotations:
+          summary: "Fund Transfer failing in region {{ $labels.region }}"
+          description: "Region {{ $labels.region }} failure ratio is {{ printf \"%.1f\" (mul $value 100) }}% over the last minute."
+
+      # Latency SLO breach.
+      - alert: FundTransferHighLatency
+        expr: fund_transfer:latency_p95:5m > 1.5
+        for: 1m
+        labels:
+          severity: warning
+          service: b-mobile-fund-transfer
+        annotations:
+          summary: "Fund Transfer p95 latency above 1.5s"
+          description: "p95 latency is {{ printf \"%.2f\" $value }}s over the last 5 minutes."
+
+      # Service down.
+      - alert: FundTransferServiceDown
+        expr: up{job="fund-transfer-service"} == 0
+        for: 30s
+        labels:
+          severity: critical
+          service: b-mobile-fund-transfer
+        annotations:
+          summary: "Fund Transfer service is down"
+          description: "Prometheus cannot scrape the fund-transfer-service target."

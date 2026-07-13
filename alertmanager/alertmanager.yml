@@ -1,0 +1,12 @@
+route:
+  receiver: ops-vision-webhook
+  group_by: ['alertname', 'region']
+  group_wait: 5s
+  group_interval: 10s
+  repeat_interval: 1m
+
+receivers:
+  - name: ops-vision-webhook
+    webhook_configs:
+      - url: 'http://webhook-receiver:9000/webhook'
+        send_resolved: true

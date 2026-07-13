@@ -1,0 +1,48 @@
+flowchart TB
+    subgraph Sources["Monitored Applications"]
+        BM["B Mobile"]
+        BC["B Corp"]
+        OTH["Other digital apps + legacy systems"]
+    end
+
+    subgraph Edge["Collection (agent side, non-blocking)"]
+        OTEL["OpenTelemetry Collector<br/>(agent + gateway)"]
+    end
+
+    subgraph Bus["Buffer"]
+        KAFKA["Apache Kafka<br/>(decouple + absorb spikes)"]
+    end
+
+    subgraph Process["Stream Processing"]
+        PROC["Stream consumers<br/>(enrich, route, downsample)"]
+    end
+
+    subgraph Store["Storage"]
+        PROM["Prometheus / Mimir<br/>(hot metrics, real time)"]
+        ES["Elasticsearch / Loki<br/>(warm logs + traces)"]
+        COLD["Object storage S3<br/>(cold, long term audit)"]
+    end
+
+    subgraph Serve["Visualization + Alerting"]
+        GRAF["Grafana<br/>(dashboards)"]
+        ALERT["Alertmanager<br/>(evaluate + route)"]
+    end
+
+    subgraph Out["Actions"]
+        WA["WhatsApp API<br/>(notify support)"]
+        TICK["Internal Ticketing<br/>(auto tickets)"]
+    end
+
+    BM --> OTEL
+    BC --> OTEL
+    OTH --> OTEL
+    OTEL --> KAFKA
+    KAFKA --> PROC
+    PROC --> PROM
+    PROC --> ES
+    PROC --> COLD
+    PROM --> GRAF
+    ES --> GRAF
+    PROM --> ALERT
+    ALERT --> WA
+    ALERT --> TICK
