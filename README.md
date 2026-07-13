@@ -306,6 +306,7 @@ docker compose down
 ```
 .
 ├── README.md                     Part A and Part B, plus run instructions
+├── GUIDE.md                      Operations guide and code walkthrough
 ├── docker-compose.yml            Spins up the entire PoC
 ├── fund-transfer-service/        Simulated microservice (Part C)
 │   ├── server.js
@@ -320,8 +321,23 @@ docker compose down
 │   └── alert.rules.yml           Recording rules and alerts
 ├── alertmanager/
 │   └── alertmanager.yml          Webhook routing
-└── grafana/
-    ├── provisioning/             Auto-load datasource and dashboard
-    └── dashboards/
-        └── fund-transfer.json    The Ops Vision dashboard
+├── grafana/
+│   ├── provisioning/             Auto-load datasource and dashboard
+│   └── dashboards/
+│       └── fund-transfer.json    The Ops Vision dashboard
+└── docs/                         Architecture diagrams (Mermaid + PNG)
 ```
+
+For a file by file walkthrough, the concepts behind each config, and how to modify things, see [GUIDE.md](GUIDE.md).
+
+---
+
+## AI Usage
+
+Following the assignment's disclosure request:
+
+- **Tool used:** Claude (Claude Pro).
+- **What it helped with:** analysis and review. I used it to pressure-test the observability strategy in Part A, sanity-check the architecture trade-offs in Part B, and draft boilerplate and configuration files (for example, scaffolding the Prometheus scrape config and the Dockerfiles).
+- **Split:** roughly 20% of the code was AI-assisted boilerplate. The remaining 80%, the architecture, the metric and SLO definitions, the alerting logic, and the final implementation, is my own work.
+
+I am responsible for everything in this repository. I can explain, defend, and modify any component, including the PromQL recording rules, the alert lifecycle, the dashboard design choices, and the ingestion strategy.
