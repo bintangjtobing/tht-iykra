@@ -3,3 +3,7 @@ npm-debug.log
 .DS_Store
 .claude/
 *.pdf
+
+# internal prep docs (not part of submission)
+GUIDE.md
+*.docx

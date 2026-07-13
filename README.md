@@ -306,7 +306,6 @@ docker compose down
 ```
 .
 ├── README.md                     Part A and Part B, plus run instructions
-├── GUIDE.md                      Operations guide and code walkthrough
 ├── docker-compose.yml            Spins up the entire PoC
 ├── fund-transfer-service/        Simulated microservice (Part C)
 │   ├── server.js
@@ -327,8 +326,6 @@ docker compose down
 │       └── fund-transfer.json    The Ops Vision dashboard
 └── docs/                         Architecture diagrams (Mermaid + PNG)
 ```
-
-For a file by file walkthrough, the concepts behind each config, and how to modify things, see [GUIDE.md](GUIDE.md).
 
 ---
 
