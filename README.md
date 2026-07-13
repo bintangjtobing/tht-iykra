@@ -45,9 +45,11 @@ You collect all three signals. Each answers a different question.
 Metrics answer "is something wrong and how bad." You emit them from the service in Prometheus format.
 
 - `fund_transfer_requests_total` counter, labels: `status`, `region`, `channel`, `error_code`.
-- `fund_transfer_duration_seconds` histogram, labels: `status`, `region`. Histograms give you p95 and p99 without shipping every event.
-- `fund_transfer_amount_rupiah_total` counter, labels: `region`, `channel`.
+- `fund_transfer_duration_seconds` histogram, labels: `status`, `region`, `channel`. Histograms give you p95 and p99 without shipping every event.
+- `fund_transfer_amount_rupiah_total` counter, labels: `region`, `channel`. This is the money view.
 - `fund_transfer_in_flight` gauge for concurrent load.
+- `fund_transfer_dependency_requests_total` counter, labels: `dependency`, `status`. Tracks calls to the fraud check, core ledger, and interbank switch.
+- `fund_transfer_dependency_duration_seconds` histogram, label: `dependency`. Latency of each downstream hop.
 
 Keep label cardinality bounded. Region has 5 values and channel has 4. You never label by customer id or account number. High cardinality kills Prometheus.
 
@@ -215,11 +217,15 @@ PNG version if Mermaid does not render: [docs/poc-flow.png](docs/poc-flow.png)
 
 Components:
 
-- `fund-transfer-service` (Node.js). Simulates the Fund Transfer flow. Generates success and failed transfers continuously. Exposes Prometheus metrics on `/metrics` and prints structured JSON logs. Has admin endpoints to raise the failure rate on demand.
-- `prometheus`. Scrapes the service every 5 seconds and evaluates the alert rules.
+- `fund-transfer-service` (Node.js). Simulates the Fund Transfer flow. Generates success and failed transfers continuously across 5 regions and 4 channels. Simulates downstream calls to the fraud check, core ledger, and interbank switch. Exposes Prometheus metrics on `/metrics` and prints structured JSON logs with a `trace_id`. Has admin endpoints to raise the failure rate or break a single region on demand.
+- `prometheus`. Scrapes the service every 5 seconds and evaluates 6 recording rules and 5 alert rules.
 - `alertmanager`. Routes firing alerts to the webhook receiver.
 - `webhook-receiver` (Node.js). Stands in for the WhatsApp API and the Internal Ticketing System. Logs a readable summary and the raw payload.
-- `grafana`. Pre-provisioned dashboard and datasource. No manual setup.
+- `grafana`. Pre-provisioned datasource and a 15 panel dashboard styled as a dark blue operations terminal. No manual setup.
+
+The dashboard panels: success rate, failure ratio, throughput, p95 latency, in-flight, and rupiah value flow as headline tiles, then transfers by status, failure ratio by region, throughput by channel, value flow by channel, latency percentiles, failures by error code, dependency error ratio, a region health table, and dependency p95 latency.
+
+The alerts: `FundTransferHighFailureRate` (global), `FundTransferRegionalFailureSpike` (per region), `FundTransferDependencyErrors` (per downstream), `FundTransferHighLatency`, and `FundTransferServiceDown`.
 
 ### How to run the PoC
 

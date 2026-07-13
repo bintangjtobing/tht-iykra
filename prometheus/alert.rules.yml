@@ -15,6 +15,24 @@ groups:
           /
           clamp_min(sum by (region) (rate(fund_transfer_requests_total[1m])), 0.001)
 
+      # Same ratio, split per channel.
+      - record: fund_transfer:failure_ratio:rate1m_by_channel
+        expr: |
+          sum by (channel) (rate(fund_transfer_requests_total{status="failed"}[1m]))
+          /
+          clamp_min(sum by (channel) (rate(fund_transfer_requests_total[1m])), 0.001)
+
+      # Downstream dependency error ratio, per dependency.
+      - record: fund_transfer:dependency_error_ratio:rate1m
+        expr: |
+          sum by (dependency) (rate(fund_transfer_dependency_requests_total{status="error"}[1m]))
+          /
+          clamp_min(sum by (dependency) (rate(fund_transfer_dependency_requests_total[1m])), 0.001)
+
+      # Throughput in transfers per second.
+      - record: fund_transfer:tps:rate1m
+        expr: sum(rate(fund_transfer_requests_total[1m]))
+
       # p95 latency over 5 minutes.
       - record: fund_transfer:latency_p95:5m
         expr: |
@@ -46,6 +64,17 @@ groups:
         annotations:
           summary: "Fund Transfer failing in region {{ $labels.region }}"
           description: "Region {{ $labels.region }} failure ratio is {{ $value | humanizePercentage }} over the last minute."
+
+      # Downstream dependency degradation. Points at core ledger or interbank switch.
+      - alert: FundTransferDependencyErrors
+        expr: fund_transfer:dependency_error_ratio:rate1m > 0.20
+        for: 30s
+        labels:
+          severity: critical
+          service: b-mobile-fund-transfer
+        annotations:
+          summary: "Dependency {{ $labels.dependency }} error rate high"
+          description: "{{ $labels.dependency }} error ratio is {{ $value | humanizePercentage }} over the last minute."
 
       # Latency SLO breach.
       - alert: FundTransferHighLatency

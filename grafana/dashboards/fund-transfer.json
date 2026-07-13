@@ -1,110 +1,186 @@
 {
   "annotations": { "list": [] },
   "editable": true,
-  "graphTooltip": 0,
-  "title": "Ops Vision - B Mobile Fund Transfer",
+  "style": "dark",
+  "graphTooltip": 1,
+  "title": "OPS VISION // B MOBILE FUND TRANSFER",
   "uid": "fund-transfer",
+  "tags": ["ops-vision", "b-mobile", "fund-transfer"],
   "schemaVersion": 39,
-  "version": 1,
+  "version": 2,
   "time": { "from": "now-15m", "to": "now" },
   "refresh": "5s",
+  "templating": { "list": [] },
   "panels": [
     {
       "type": "stat",
-      "title": "Success Rate (1m)",
-      "gridPos": { "h": 6, "w": 6, "x": 0, "y": 0 },
+      "title": "SUCCESS RATE // 1m",
+      "gridPos": { "h": 5, "w": 4, "x": 0, "y": 0 },
+      "options": { "colorMode": "value", "graphMode": "area", "textMode": "value", "reduceOptions": { "calcs": ["lastNotNull"] }, "justifyMode": "center" },
       "fieldConfig": {
         "defaults": {
-          "unit": "percentunit",
-          "min": 0,
-          "max": 1,
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              { "color": "red", "value": null },
-              { "color": "yellow", "value": 0.95 },
-              { "color": "green", "value": 0.99 }
-            ]
-          }
+          "unit": "percentunit", "min": 0, "max": 1, "decimals": 2,
+          "thresholds": { "mode": "absolute", "steps": [
+            { "color": "#ff3b30", "value": null },
+            { "color": "#ff9100", "value": 0.95 },
+            { "color": "#00b4ff", "value": 0.99 }
+          ] }
         }
       },
-      "targets": [
-        { "expr": "1 - fund_transfer:failure_ratio:rate1m", "refId": "A" }
-      ]
+      "targets": [ { "expr": "1 - fund_transfer:failure_ratio:rate1m", "refId": "A" } ]
     },
     {
       "type": "stat",
-      "title": "Failure Ratio (1m)",
-      "gridPos": { "h": 6, "w": 6, "x": 6, "y": 0 },
+      "title": "FAILURE RATIO // 1m",
+      "gridPos": { "h": 5, "w": 4, "x": 4, "y": 0 },
+      "options": { "colorMode": "value", "graphMode": "area", "textMode": "value", "reduceOptions": { "calcs": ["lastNotNull"] }, "justifyMode": "center" },
       "fieldConfig": {
         "defaults": {
-          "unit": "percentunit",
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              { "color": "green", "value": null },
-              { "color": "yellow", "value": 0.05 },
-              { "color": "red", "value": 0.10 }
-            ]
-          }
+          "unit": "percentunit", "decimals": 2,
+          "thresholds": { "mode": "absolute", "steps": [
+            { "color": "#00b4ff", "value": null },
+            { "color": "#ff9100", "value": 0.05 },
+            { "color": "#ff3b30", "value": 0.10 }
+          ] }
         }
       },
-      "targets": [
-        { "expr": "fund_transfer:failure_ratio:rate1m", "refId": "A" }
-      ]
+      "targets": [ { "expr": "fund_transfer:failure_ratio:rate1m", "refId": "A" } ]
     },
     {
       "type": "stat",
-      "title": "Throughput (req/s)",
-      "gridPos": { "h": 6, "w": 6, "x": 12, "y": 0 },
-      "fieldConfig": { "defaults": { "unit": "reqps" } },
-      "targets": [
-        { "expr": "sum(rate(fund_transfer_requests_total[1m]))", "refId": "A" }
-      ]
+      "title": "THROUGHPUT // req/s",
+      "gridPos": { "h": 5, "w": 4, "x": 8, "y": 0 },
+      "options": { "colorMode": "value", "graphMode": "area", "textMode": "value", "reduceOptions": { "calcs": ["lastNotNull"] }, "justifyMode": "center" },
+      "fieldConfig": {
+        "defaults": {
+          "unit": "reqps", "decimals": 1,
+          "thresholds": { "mode": "absolute", "steps": [ { "color": "#00b4ff", "value": null } ] }
+        }
+      },
+      "targets": [ { "expr": "fund_transfer:tps:rate1m", "refId": "A" } ]
     },
     {
       "type": "stat",
-      "title": "p95 Latency (5m)",
-      "gridPos": { "h": 6, "w": 6, "x": 18, "y": 0 },
+      "title": "P95 LATENCY // 5m",
+      "gridPos": { "h": 5, "w": 4, "x": 12, "y": 0 },
+      "options": { "colorMode": "value", "graphMode": "area", "textMode": "value", "reduceOptions": { "calcs": ["lastNotNull"] }, "justifyMode": "center" },
       "fieldConfig": {
         "defaults": {
-          "unit": "s",
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              { "color": "green", "value": null },
-              { "color": "yellow", "value": 1 },
-              { "color": "red", "value": 1.5 }
-            ]
-          }
+          "unit": "s", "decimals": 2,
+          "thresholds": { "mode": "absolute", "steps": [
+            { "color": "#00b4ff", "value": null },
+            { "color": "#ff9100", "value": 1 },
+            { "color": "#ff3b30", "value": 1.5 }
+          ] }
         }
       },
-      "targets": [
-        { "expr": "fund_transfer:latency_p95:5m", "refId": "A" }
-      ]
+      "targets": [ { "expr": "fund_transfer:latency_p95:5m", "refId": "A" } ]
+    },
+    {
+      "type": "stat",
+      "title": "IN FLIGHT",
+      "gridPos": { "h": 5, "w": 4, "x": 16, "y": 0 },
+      "options": { "colorMode": "value", "graphMode": "area", "textMode": "value", "reduceOptions": { "calcs": ["lastNotNull"] }, "justifyMode": "center" },
+      "fieldConfig": {
+        "defaults": {
+          "unit": "short", "decimals": 0,
+          "thresholds": { "mode": "absolute", "steps": [ { "color": "#33ccff", "value": null } ] }
+        }
+      },
+      "targets": [ { "expr": "fund_transfer_in_flight", "refId": "A" } ]
+    },
+    {
+      "type": "stat",
+      "title": "VALUE FLOW // Rp per min",
+      "gridPos": { "h": 5, "w": 4, "x": 20, "y": 0 },
+      "options": { "colorMode": "value", "graphMode": "area", "textMode": "value", "reduceOptions": { "calcs": ["lastNotNull"] }, "justifyMode": "center" },
+      "fieldConfig": {
+        "defaults": {
+          "unit": "short", "decimals": 0,
+          "thresholds": { "mode": "absolute", "steps": [ { "color": "#00b4ff", "value": null } ] }
+        }
+      },
+      "targets": [ { "expr": "sum(rate(fund_transfer_amount_rupiah_total[1m])) * 60", "refId": "A" } ]
+    },
+
+    {
+      "type": "timeseries",
+      "title": "TRANSFERS BY STATUS // req/s",
+      "gridPos": { "h": 8, "w": 12, "x": 0, "y": 5 },
+      "fieldConfig": {
+        "defaults": { "custom": { "drawStyle": "line", "fillOpacity": 25, "lineWidth": 2, "showPoints": "never" } },
+        "overrides": [
+          { "matcher": { "id": "byName", "options": "success" }, "properties": [ { "id": "color", "value": { "mode": "fixed", "fixedColor": "#2962ff" } } ] },
+          { "matcher": { "id": "byName", "options": "failed" }, "properties": [ { "id": "color", "value": { "mode": "fixed", "fixedColor": "#ff3b30" } } ] }
+        ]
+      },
+      "options": { "legend": { "displayMode": "list", "placement": "bottom" }, "tooltip": { "mode": "multi" } },
+      "targets": [ { "expr": "sum by (status) (rate(fund_transfer_requests_total[1m]))", "legendFormat": "{{status}}", "refId": "A" } ]
     },
     {
       "type": "timeseries",
-      "title": "Transfers by status (req/s)",
-      "gridPos": { "h": 8, "w": 12, "x": 0, "y": 6 },
-      "targets": [
-        { "expr": "sum by (status) (rate(fund_transfer_requests_total[1m]))", "legendFormat": "{{status}}", "refId": "A" }
-      ]
+      "title": "FAILURE RATIO BY REGION",
+      "gridPos": { "h": 8, "w": 12, "x": 12, "y": 5 },
+      "fieldConfig": {
+        "defaults": { "unit": "percentunit", "custom": { "drawStyle": "line", "fillOpacity": 10, "lineWidth": 2, "showPoints": "never" } },
+        "overrides": [
+          { "matcher": { "id": "byName", "options": "jakarta" }, "properties": [ { "id": "color", "value": { "mode": "fixed", "fixedColor": "#00b4ff" } } ] },
+          { "matcher": { "id": "byName", "options": "surabaya" }, "properties": [ { "id": "color", "value": { "mode": "fixed", "fixedColor": "#2962ff" } } ] },
+          { "matcher": { "id": "byName", "options": "medan" }, "properties": [ { "id": "color", "value": { "mode": "fixed", "fixedColor": "#40c4ff" } } ] },
+          { "matcher": { "id": "byName", "options": "makassar" }, "properties": [ { "id": "color", "value": { "mode": "fixed", "fixedColor": "#536dfe" } } ] },
+          { "matcher": { "id": "byName", "options": "bandung" }, "properties": [ { "id": "color", "value": { "mode": "fixed", "fixedColor": "#18ffff" } } ] }
+        ]
+      },
+      "options": { "legend": { "displayMode": "list", "placement": "bottom" }, "tooltip": { "mode": "multi" } },
+      "targets": [ { "expr": "fund_transfer:failure_ratio:rate1m_by_region", "legendFormat": "{{region}}", "refId": "A" } ]
+    },
+
+    {
+      "type": "timeseries",
+      "title": "THROUGHPUT BY CHANNEL // req/s",
+      "gridPos": { "h": 8, "w": 12, "x": 0, "y": 13 },
+      "fieldConfig": {
+        "defaults": { "unit": "reqps", "custom": { "drawStyle": "line", "fillOpacity": 30, "lineWidth": 1, "showPoints": "never", "stacking": { "mode": "normal" } } },
+        "overrides": [
+          { "matcher": { "id": "byName", "options": "bi_fast" }, "properties": [ { "id": "color", "value": { "mode": "fixed", "fixedColor": "#00b4ff" } } ] },
+          { "matcher": { "id": "byName", "options": "rtgs" }, "properties": [ { "id": "color", "value": { "mode": "fixed", "fixedColor": "#2962ff" } } ] },
+          { "matcher": { "id": "byName", "options": "internal" }, "properties": [ { "id": "color", "value": { "mode": "fixed", "fixedColor": "#40c4ff" } } ] },
+          { "matcher": { "id": "byName", "options": "qris" }, "properties": [ { "id": "color", "value": { "mode": "fixed", "fixedColor": "#536dfe" } } ] }
+        ]
+      },
+      "options": { "legend": { "displayMode": "list", "placement": "bottom" }, "tooltip": { "mode": "multi" } },
+      "targets": [ { "expr": "sum by (channel) (rate(fund_transfer_requests_total[1m]))", "legendFormat": "{{channel}}", "refId": "A" } ]
     },
     {
       "type": "timeseries",
-      "title": "Failure ratio by region",
-      "gridPos": { "h": 8, "w": 12, "x": 12, "y": 6 },
-      "fieldConfig": { "defaults": { "unit": "percentunit" } },
-      "targets": [
-        { "expr": "fund_transfer:failure_ratio:rate1m_by_region", "legendFormat": "{{region}}", "refId": "A" }
-      ]
+      "title": "VALUE FLOW BY CHANNEL // Rp per s",
+      "gridPos": { "h": 8, "w": 12, "x": 12, "y": 13 },
+      "fieldConfig": {
+        "defaults": { "unit": "short", "custom": { "drawStyle": "line", "fillOpacity": 20, "lineWidth": 2, "showPoints": "never" } },
+        "overrides": [
+          { "matcher": { "id": "byName", "options": "bi_fast" }, "properties": [ { "id": "color", "value": { "mode": "fixed", "fixedColor": "#00b4ff" } } ] },
+          { "matcher": { "id": "byName", "options": "rtgs" }, "properties": [ { "id": "color", "value": { "mode": "fixed", "fixedColor": "#2962ff" } } ] },
+          { "matcher": { "id": "byName", "options": "internal" }, "properties": [ { "id": "color", "value": { "mode": "fixed", "fixedColor": "#40c4ff" } } ] },
+          { "matcher": { "id": "byName", "options": "qris" }, "properties": [ { "id": "color", "value": { "mode": "fixed", "fixedColor": "#536dfe" } } ] }
+        ]
+      },
+      "options": { "legend": { "displayMode": "list", "placement": "bottom" }, "tooltip": { "mode": "multi" } },
+      "targets": [ { "expr": "sum by (channel) (rate(fund_transfer_amount_rupiah_total[1m]))", "legendFormat": "{{channel}}", "refId": "A" } ]
     },
+
     {
       "type": "timeseries",
-      "title": "Latency p50 / p95 / p99 (s)",
-      "gridPos": { "h": 8, "w": 12, "x": 0, "y": 14 },
-      "fieldConfig": { "defaults": { "unit": "s" } },
+      "title": "LATENCY p50 / p95 / p99 // s",
+      "gridPos": { "h": 8, "w": 8, "x": 0, "y": 21 },
+      "fieldConfig": {
+        "defaults": { "unit": "s", "custom": { "drawStyle": "line", "fillOpacity": 5, "lineWidth": 2, "showPoints": "never" } },
+        "overrides": [
+          { "matcher": { "id": "byName", "options": "p50" }, "properties": [ { "id": "color", "value": { "mode": "fixed", "fixedColor": "#40c4ff" } } ] },
+          { "matcher": { "id": "byName", "options": "p95" }, "properties": [ { "id": "color", "value": { "mode": "fixed", "fixedColor": "#2962ff" } } ] },
+          { "matcher": { "id": "byName", "options": "p99" }, "properties": [ { "id": "color", "value": { "mode": "fixed", "fixedColor": "#ff9100" } } ] }
+        ]
+      },
+      "options": { "legend": { "displayMode": "list", "placement": "bottom" }, "tooltip": { "mode": "multi" } },
       "targets": [
         { "expr": "histogram_quantile(0.50, sum(rate(fund_transfer_duration_seconds_bucket[5m])) by (le))", "legendFormat": "p50", "refId": "A" },
         { "expr": "histogram_quantile(0.95, sum(rate(fund_transfer_duration_seconds_bucket[5m])) by (le))", "legendFormat": "p95", "refId": "B" },
@@ -113,11 +189,76 @@
     },
     {
       "type": "timeseries",
-      "title": "Failures by error code (req/s)",
-      "gridPos": { "h": 8, "w": 12, "x": 12, "y": 14 },
-      "targets": [
-        { "expr": "sum by (error_code) (rate(fund_transfer_requests_total{status=\"failed\"}[1m]))", "legendFormat": "{{error_code}}", "refId": "A" }
-      ]
+      "title": "FAILURES BY ERROR CODE // req/s",
+      "gridPos": { "h": 8, "w": 8, "x": 8, "y": 21 },
+      "fieldConfig": {
+        "defaults": { "custom": { "drawStyle": "bars", "fillOpacity": 60, "lineWidth": 1, "showPoints": "never", "stacking": { "mode": "normal" } } },
+        "overrides": [
+          { "matcher": { "id": "byName", "options": "INSUFFICIENT_FUNDS" }, "properties": [ { "id": "color", "value": { "mode": "fixed", "fixedColor": "#40c4ff" } } ] },
+          { "matcher": { "id": "byName", "options": "LIMIT_EXCEEDED" }, "properties": [ { "id": "color", "value": { "mode": "fixed", "fixedColor": "#536dfe" } } ] },
+          { "matcher": { "id": "byName", "options": "FRAUD_BLOCKED" }, "properties": [ { "id": "color", "value": { "mode": "fixed", "fixedColor": "#00b4ff" } } ] },
+          { "matcher": { "id": "byName", "options": "TIMEOUT" }, "properties": [ { "id": "color", "value": { "mode": "fixed", "fixedColor": "#ff9100" } } ] },
+          { "matcher": { "id": "byName", "options": "DOWNSTREAM_5XX" }, "properties": [ { "id": "color", "value": { "mode": "fixed", "fixedColor": "#ff3b30" } } ] }
+        ]
+      },
+      "options": { "legend": { "displayMode": "list", "placement": "bottom" }, "tooltip": { "mode": "multi" } },
+      "targets": [ { "expr": "sum by (error_code) (rate(fund_transfer_requests_total{status=\"failed\"}[1m]))", "legendFormat": "{{error_code}}", "refId": "A" } ]
+    },
+    {
+      "type": "timeseries",
+      "title": "DEPENDENCY ERROR RATIO // 1m",
+      "gridPos": { "h": 8, "w": 8, "x": 16, "y": 21 },
+      "fieldConfig": {
+        "defaults": { "unit": "percentunit", "custom": { "drawStyle": "line", "fillOpacity": 10, "lineWidth": 2, "showPoints": "never" } },
+        "overrides": [
+          { "matcher": { "id": "byName", "options": "fraud_check" }, "properties": [ { "id": "color", "value": { "mode": "fixed", "fixedColor": "#00b4ff" } } ] },
+          { "matcher": { "id": "byName", "options": "core_ledger" }, "properties": [ { "id": "color", "value": { "mode": "fixed", "fixedColor": "#2962ff" } } ] },
+          { "matcher": { "id": "byName", "options": "interbank_switch" }, "properties": [ { "id": "color", "value": { "mode": "fixed", "fixedColor": "#ff9100" } } ] }
+        ]
+      },
+      "options": { "legend": { "displayMode": "list", "placement": "bottom" }, "tooltip": { "mode": "multi" } },
+      "targets": [ { "expr": "fund_transfer:dependency_error_ratio:rate1m", "legendFormat": "{{dependency}}", "refId": "A" } ]
+    },
+
+    {
+      "type": "table",
+      "title": "REGION HEALTH BOARD",
+      "gridPos": { "h": 8, "w": 12, "x": 0, "y": 29 },
+      "options": { "showHeader": true, "sortBy": [ { "displayName": "Failure Ratio", "desc": true } ] },
+      "fieldConfig": {
+        "defaults": {
+          "custom": { "align": "center", "cellOptions": { "type": "color-text" } },
+          "unit": "percentunit", "decimals": 2,
+          "thresholds": { "mode": "absolute", "steps": [
+            { "color": "#00b4ff", "value": null },
+            { "color": "#ff9100", "value": 0.10 },
+            { "color": "#ff3b30", "value": 0.30 }
+          ] }
+        },
+        "overrides": [
+          { "matcher": { "id": "byName", "options": "region" }, "properties": [ { "id": "custom.cellOptions", "value": { "type": "auto" } }, { "id": "unit", "value": "string" } ] }
+        ]
+      },
+      "transformations": [
+        { "id": "labelsToFields", "options": { "mode": "columns" } },
+        { "id": "organize", "options": { "renameByName": { "Value": "Failure Ratio", "region": "Region" }, "excludeByName": { "Time": true, "__name__": true, "service": true, "instance": true, "job": true } } }
+      ],
+      "targets": [ { "expr": "fund_transfer:failure_ratio:rate1m_by_region", "format": "table", "instant": true, "refId": "A" } ]
+    },
+    {
+      "type": "timeseries",
+      "title": "DEPENDENCY p95 LATENCY // s",
+      "gridPos": { "h": 8, "w": 12, "x": 12, "y": 29 },
+      "fieldConfig": {
+        "defaults": { "unit": "s", "custom": { "drawStyle": "line", "fillOpacity": 5, "lineWidth": 2, "showPoints": "never" } },
+        "overrides": [
+          { "matcher": { "id": "byName", "options": "fraud_check" }, "properties": [ { "id": "color", "value": { "mode": "fixed", "fixedColor": "#00b4ff" } } ] },
+          { "matcher": { "id": "byName", "options": "core_ledger" }, "properties": [ { "id": "color", "value": { "mode": "fixed", "fixedColor": "#2962ff" } } ] },
+          { "matcher": { "id": "byName", "options": "interbank_switch" }, "properties": [ { "id": "color", "value": { "mode": "fixed", "fixedColor": "#40c4ff" } } ] }
+        ]
+      },
+      "options": { "legend": { "displayMode": "list", "placement": "bottom" }, "tooltip": { "mode": "multi" } },
+      "targets": [ { "expr": "histogram_quantile(0.95, sum by (dependency, le) (rate(fund_transfer_dependency_duration_seconds_bucket[5m])))", "legendFormat": "{{dependency}}", "refId": "A" } ]
     }
   ]
 }
