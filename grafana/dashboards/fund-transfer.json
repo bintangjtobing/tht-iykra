@@ -18,7 +18,7 @@
       "title": "Success rate",
       "description": "Share of transfers that completed successfully over the last minute. SLO target 99.9%.",
       "gridPos": { "h": 5, "w": 4, "x": 0, "y": 1 },
-      "options": { "colorMode": "value", "graphMode": "area", "textMode": "value", "reduceOptions": { "calcs": ["lastNotNull"] }, "justifyMode": "center" },
+      "options": { "colorMode": "value", "graphMode": "area", "textMode": "value", "reduceOptions": { "calcs": ["lastNotNull"] }, "justifyMode": "auto", "text": { "valueSize": 30, "titleSize": 13 } },
       "fieldConfig": {
         "defaults": {
           "unit": "percentunit", "min": 0, "max": 1, "decimals": 2,
@@ -36,7 +36,7 @@
       "title": "Failure ratio",
       "description": "Share of transfers that failed over the last minute.",
       "gridPos": { "h": 5, "w": 4, "x": 4, "y": 1 },
-      "options": { "colorMode": "value", "graphMode": "area", "textMode": "value", "reduceOptions": { "calcs": ["lastNotNull"] }, "justifyMode": "center" },
+      "options": { "colorMode": "value", "graphMode": "area", "textMode": "value", "reduceOptions": { "calcs": ["lastNotNull"] }, "justifyMode": "auto", "text": { "valueSize": 30, "titleSize": 13 } },
       "fieldConfig": {
         "defaults": {
           "unit": "percentunit", "decimals": 2,
@@ -54,7 +54,7 @@
       "title": "Throughput",
       "description": "Transfers processed per second.",
       "gridPos": { "h": 5, "w": 4, "x": 8, "y": 1 },
-      "options": { "colorMode": "value", "graphMode": "area", "textMode": "value", "reduceOptions": { "calcs": ["lastNotNull"] }, "justifyMode": "center" },
+      "options": { "colorMode": "value", "graphMode": "area", "textMode": "value", "reduceOptions": { "calcs": ["lastNotNull"] }, "justifyMode": "auto", "text": { "valueSize": 30, "titleSize": 13 } },
       "fieldConfig": {
         "defaults": {
           "unit": "reqps", "decimals": 1,
@@ -68,7 +68,7 @@
       "title": "Latency (p95)",
       "description": "95th percentile end to end transfer time over 5 minutes. SLO target under 1.5s.",
       "gridPos": { "h": 5, "w": 4, "x": 12, "y": 1 },
-      "options": { "colorMode": "value", "graphMode": "area", "textMode": "value", "reduceOptions": { "calcs": ["lastNotNull"] }, "justifyMode": "center" },
+      "options": { "colorMode": "value", "graphMode": "area", "textMode": "value", "reduceOptions": { "calcs": ["lastNotNull"] }, "justifyMode": "auto", "text": { "valueSize": 30, "titleSize": 13 } },
       "fieldConfig": {
         "defaults": {
           "unit": "s", "decimals": 2,
@@ -86,7 +86,7 @@
       "title": "In flight",
       "description": "Transfers currently being processed.",
       "gridPos": { "h": 5, "w": 4, "x": 16, "y": 1 },
-      "options": { "colorMode": "value", "graphMode": "area", "textMode": "value", "reduceOptions": { "calcs": ["lastNotNull"] }, "justifyMode": "center" },
+      "options": { "colorMode": "value", "graphMode": "area", "textMode": "value", "reduceOptions": { "calcs": ["lastNotNull"] }, "justifyMode": "auto", "text": { "valueSize": 30, "titleSize": 13 } },
       "fieldConfig": {
         "defaults": {
           "unit": "short", "decimals": 0,
@@ -100,7 +100,7 @@
       "title": "Value cleared / min",
       "description": "Rupiah value of successful transfers per minute.",
       "gridPos": { "h": 5, "w": 4, "x": 20, "y": 1 },
-      "options": { "colorMode": "value", "graphMode": "area", "textMode": "value", "reduceOptions": { "calcs": ["lastNotNull"] }, "justifyMode": "center" },
+      "options": { "colorMode": "value", "graphMode": "area", "textMode": "value", "reduceOptions": { "calcs": ["lastNotNull"] }, "justifyMode": "auto", "text": { "valueSize": 30, "titleSize": 13 } },
       "fieldConfig": {
         "defaults": {
           "unit": "currencyIDR", "decimals": 0,
